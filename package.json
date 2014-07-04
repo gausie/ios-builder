@@ -1,0 +1,25 @@
+{
+  "name": "ios-builder",
+  "version": "0.0.1",
+  "description": "Build and export to IPA. Automatically",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/devfd/ios-builder.git"
+  },
+  "keywords": [
+    "ios",
+    "ipa",
+    "xcode",
+    "ios-deploy"
+  ],
+  "author": "devfd",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/devfd/ios-builder/issues"
+  },
+  "homepage": "https://github.com/devfd/ios-builder"
+}
