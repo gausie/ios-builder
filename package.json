@@ -14,12 +14,19 @@
     "ios",
     "ipa",
     "xcode",
-    "ios-deploy"
+    "ios-deploy",
+    "iphone",
+    "ipad",
+    "provision"
   ],
   "author": "devfd",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/devfd/ios-builder/issues"
   },
-  "homepage": "https://github.com/devfd/ios-builder"
+  "homepage": "https://github.com/devfd/ios-builder",
+  "dependencies": {
+    "bluebird": "^2.1.3",
+    "lodash": "^2.4.1"
+  }
 }
