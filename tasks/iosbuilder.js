@@ -10,20 +10,18 @@ module.exports = function(grunt) {
         cwd = path.resolve(config.path) || process.cwd();
 
     IosBuilder.create(cwd).then(function(ios) {
-      ios.updateProjectInfo(data.bundle)
+      ios.updateProjectInfo(data.appId)
       .then(function() {
-        return ios.xcode.build({
+        return ios.build({
+          appId: data.appId,
           scheme: data.scheme || config.scheme,
           configuration: data.configuration || config.configuration,
           sdk: data.sdk || config.sdk,
-          profile: data.profile,
+          profileId: data.profileId,
           identity: data.identity
         })
       })
-      .then(done)
-      .catch(function(err) {
-        grunt.fail.fatal(err);
-      });
+      .then(done);
     });
   });
 
@@ -34,30 +32,20 @@ module.exports = function(grunt) {
         cwd = path.resolve(config.path) || process.cwd();
 
     IosBuilder.create(cwd).then(function(ios) {
-      ios.updateProjectInfo(data.bundle)
-
+      ios.updateProjectInfo(data.appId)
       .then(function() {
-        return ios.xcode.archive({
+        return ios.exportIpa({
+          appId: data.appId,
           archiveName: data.archiveName,
           scheme: data.scheme || config.scheme,
           configuration: data.configuration || config.configuration,
-          profile: data.profile,
-          identity: data.identity
-        })
-      })
-
-      .then(function() {
-        return ios.xcode.exportIpa({
-          archiveName: data.archiveName,
+          profileId: data.profileId,
+          identity: data.identity,
           ipaName: data.ipaName,
           profileName: data.profileName
-        })
+        });
       })
-
-      .then(done)
-      .catch(function(err) {
-        grunt.fail.fatal(err);
-      });
+      .then(done);
     });
   });
 }
