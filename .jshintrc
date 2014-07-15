@@ -14,5 +14,6 @@
   "strict": false,
   "trailing": true,
   "smarttabs": false,
-  "loopfunc": true
+  "loopfunc": true,
+  "expr": true
 }
