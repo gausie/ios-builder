@@ -2,36 +2,32 @@
 var spawn = req('spawn');
 
 describe('spawn', function() {
-  it('returns a promise', function(done) {
+  it('returns a promise', function() {
     var ls = spawn('ls');
     expect(ls.then).to.be.a('function');
     expect(ls.catch).to.be.a('function');
-    ls.finally(done);
+    return ls;
   });
 
-  it('rejects promise on spawn error', function(done) {
+  it('rejects promise on spawn error', function() {
     var child = spawn('i-do-not-exist');
-    child.catch(function(err) {
+    return child.catch(function(err) {
       expect(err).to.exist;
-      done();
     });
   });
 
-  it('rejects promise if child status not 0', function(done) {
+  it('rejects promise if child status not 0', function() {
     var child = spawn('ls --help');
-    child.catch(function(err) {
+    return child.catch(function(err) {
       expect(err).to.exist;
-      done();
     });
   });
 
-  it('returns stdout if needed', function(done) {
+  it('returns stdout if needed', function() {
     var child = spawn('ls', null, {getOutput: true});
-    child.then(function(data) {
+    return child.then(function(data) {
       expect(data).to.exist;
       expect(data).to.be.a('string');
-      done();
     });
-    child.catch(done);
   });
 });
