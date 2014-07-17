@@ -13,24 +13,16 @@ describe('Security', function() {
       var _exec = sinon.stub(Security, 'exec');
       _exec.returns(Promise.reject('This is an error'));
 
-      return Security.listIdentities()
-      .catch(function(err) {
-        expect(err).to.exist;
-        expect(err).to.eql('This is an error');
-      })
-      .finally(_exec.restore);
+      return expect(Security.listIdentities()).to.eventually.be.rejectedWith('This is an error')
+        .finally(_exec.restore);
     });
 
     it('returns an error if no identities found', function() {
       var _exec = sinon.stub(Security, 'exec');
       _exec.returns(Promise.resolve());
 
-      return Security.listIdentities()
-      .catch(function(err) {
-        expect(err).to.exist;
-        expect(err).to.have.string('No signing identities');
-      })
-      .finally(_exec.restore);
+      return expect(Security.listIdentities()).to.eventually.be.rejectedWith(/No signing identities/)
+        .finally(_exec.restore);
     });
 
     it('returns list of signing identities', function() {
@@ -60,7 +52,7 @@ describe('Security', function() {
       _exec.returns(Promise.resolve('1) F123 "iPhone distribution 0"'));
 
       expect(Security.identities).to.not.exist;
-
+    
       return Security.listIdentities()
       .then(function(identities) {
         expect(identities).to.have.length(1);
