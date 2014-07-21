@@ -130,7 +130,7 @@ describe('Security', function() {
         });
     });
 
-    it('reject promise on error', function() {
+    it('rejects promise on error', function() {
       var pem = readFile('test/fixtures/cert.pem', {encoding: 'utf8'});
       pem = pem.replace('-----BEGIN CERTIFICATE-----', '');
       pem = pem.replace('-----END CERTIFICATE-----', '');
@@ -140,6 +140,15 @@ describe('Security', function() {
   }); //end pemToPub
 
   describe('extractKeyFromIdentity', function() {
+
+    it('rejects promise if no public key is found', function() {
+      var _pemToPub = sinon.stub(Security, 'pemToPub');
+      _pemToPub.returns(Promise.resolve(null));
+
+      return expect(Security._extractKeyFromIdentity({name: 'identity'}))
+        .to.be.rejected
+        .finally(_pemToPub.restore);
+    });
 
     it('returns identity with public key', function() {
       var _pemToPub = sinon.stub(Security, 'pemToPub');
