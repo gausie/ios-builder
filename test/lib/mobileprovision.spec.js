@@ -105,4 +105,57 @@ describe('MobileProvision', function() {
         .and.eventually.to.match(/END PUBLIC KEY/);
     });
   }); // end _certToPem
+
+  describe('getProfiles', function() {
+    beforeEach(function() {
+      MobileProvision.provisions = null;
+    });
+
+    it('returns an object containing provisioning profile', function() {
+      var _certToPem = sinon.stub(MobileProvision, '_certToPem'),
+          _unwrapApple = sinon.stub(MobileProvision, '_unwrapApple'),
+          _pemToPub = sinon.stub(Security, 'pemToPub'),
+          data = readFile('test/fixtures/profile.mobileprovision', {encoding: 'utf8'});
+
+      _unwrapApple.returns(Promise.resolve(data).bind(MobileProvision));
+      _certToPem.returns('');
+      _pemToPub.returns(Promise.resolve('PUBKEY'));
+
+      return MobileProvision.getProfiles()
+        .then(function(provisions) {
+          var provision = provisions['com.iosbuilder.testappr'];
+          expect(provision.name).to.eql('Test APP');
+          expect(_certToPem).to.have.callCount(2);
+          expect(_pemToPub).to.have.callCount(2);
+        })
+        .finally(_certToPem.restore)
+        .finally(_unwrapApple.restore)
+        .finally(_pemToPub.restore);
+    });
+
+    it('uses cached result if available', function() {
+      var _certToPem = sinon.stub(MobileProvision, '_certToPem'),
+          _unwrapApple = sinon.stub(MobileProvision, '_unwrapApple'),
+          _pemToPub = sinon.stub(Security, 'pemToPub'),
+          data = readFile('test/fixtures/profile.mobileprovision', {encoding: 'utf8'});
+
+      _unwrapApple.returns(Promise.resolve(data).bind(MobileProvision));
+      _certToPem.returns('');
+      _pemToPub.returns(Promise.resolve('PUBKEY'));
+
+      return MobileProvision.getProfiles()
+        .then(function(provisions) {
+          return MobileProvision.getProfiles();
+        })
+        .then(function(provisions) {
+          var provision = provisions['com.iosbuilder.testappr'];
+          expect(provision.name).to.eql('Test APP');
+          expect(_certToPem).to.have.callCount(2);
+          expect(_pemToPub).to.have.callCount(2);
+        })
+        .finally(_certToPem.restore)
+        .finally(_unwrapApple.restore)
+        .finally(_pemToPub.restore);
+    });
+  }); // end getProfiles
 });
