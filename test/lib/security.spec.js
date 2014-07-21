@@ -10,23 +10,23 @@ describe('Security', function() {
 
   describe('listIdentities', function() {
     it('returns an error if command fails', function() {
-      var _exec = sinon.stub(Security, 'exec');
+      var _exec = sinon.stub(Security, '_exec');
       _exec.returns(Promise.reject('This is an error'));
 
-      return expect(Security.listIdentities()).to.eventually.be.rejectedWith('This is an error')
+      return expect(Security._listIdentities()).to.eventually.be.rejectedWith('This is an error')
         .finally(_exec.restore);
     });
 
     it('returns an error if no identities found', function() {
-      var _exec = sinon.stub(Security, 'exec');
+      var _exec = sinon.stub(Security, '_exec');
       _exec.returns(Promise.resolve());
 
-      return expect(Security.listIdentities()).to.eventually.be.rejectedWith(/No signing identities/)
+      return expect(Security._listIdentities()).to.eventually.be.rejectedWith(/No signing identities/)
         .finally(_exec.restore);
     });
 
     it('returns list of signing identities', function() {
-      var _exec = sinon.stub(Security, 'exec');
+      var _exec = sinon.stub(Security, '_exec');
       _exec.returns(Promise.resolve([
         '1) F123 "iPhone distribution 0"\n',
         '2) 123G "iPhone distribution 1"\n',
@@ -34,7 +34,7 @@ describe('Security', function() {
         '3 valid identities found\n\n'
       ].join('')));
 
-      return Security.listIdentities()
+      return Security._listIdentities()
       .then(function(identities) {
         expect(identities).to.have.length(3);
 
@@ -48,16 +48,16 @@ describe('Security', function() {
     });
 
     it('caches result for next call', function() {
-      var _exec = sinon.stub(Security, 'exec');
+      var _exec = sinon.stub(Security, '_exec');
       _exec.returns(Promise.resolve('1) F123 "iPhone distribution 0"'));
 
       expect(Security.identities).to.not.exist;
-    
-      return Security.listIdentities()
+
+      return Security._listIdentities()
       .then(function(identities) {
         expect(identities).to.have.length(1);
         expect(Security.identities).to.eql(identities);
-        return Security.listIdentities();
+        return Security._listIdentities();
       })
       .then(function(identities) {
         expect(Security.identities).to.eql(identities);
