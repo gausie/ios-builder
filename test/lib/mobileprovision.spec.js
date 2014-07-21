@@ -4,7 +4,7 @@ var Promise = require('bluebird'),
     Security = req('security'),
     readFile = require('fs').readFileSync,
     plist = require('plist'),
-    MobileProvision = req('MobileProvision');
+    MobileProvision = req('mobileprovision');
 
 describe('MobileProvision', function() {
   beforeEach(function() {
